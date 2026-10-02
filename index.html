@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="lt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Guess</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="box">
+        <h1>Atspėk slaptažodį</h1>
+        <p class="subtitle">
+            Sek užuominas ir po vieną atspėk visus slaptažodžio žodžius.
+        </p>
+
+        <div id="hintBox" class="hint">
+            <span class="hint-label">Užuomina</span>
+            <strong id="hint"></strong>
+        </div>
+
+        <div class="input-wrap">
+            <input id="answer" type="text" autocomplete="off" placeholder="Įrašyk atsakymą...">
+        </div>
+
+        <button id="check">Tikrinti atsakymą</button>
+
+        <div id="message"></div>
+
+        <div class="progress">
+            <span id="progressText">1 / 10</span>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill" style="width:10%"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const steps = [
+            { word: "kopa", hint: "suns vardas" },
+            { word: "2014", hint: "sun aus gimimo metai" },
+            { word: "ziema", hint: "saltas metu laikas" },
+            { word: "1991", hint: "tavo gimimo metai" },
+            { word: "gjan", hint: "megstamiausia atlikeja" },
+            { word: "2019", hint: "vidurines dukters gimimo metai" },
+            { word: "geguze", hint: "vidurines dukters gimimo menuo" },
+            { word: "veterinaras", hint: "gyvunu daktaras" },
+            { word: "corona", hint: "gerimas po pagiriu" },
+            { word: "2023", hint: "kieno gimimo metai" }
+        ];
+
+        let current = 0;
+
+        const hint = document.getElementById("hint");
+        const hintBox = document.getElementById("hintBox");
+        const answer = document.getElementById("answer");
+        const check = document.getElementById("check");
+        const message = document.getElementById("message");
+        const progressText = document.getElementById("progressText");
+        const progressFill = document.getElementById("progressFill");
+
+        function showStep() {
+            hint.textContent = steps[current].hint;
+
+            hintBox.classList.remove("animate");
+            void hintBox.offsetWidth;
+            hintBox.classList.add("animate");
+
+            answer.value = "";
+            answer.focus();
+
+            progressText.textContent = `${current + 1} / ${steps.length}`;
+            progressFill.style.width = `${((current + 1) / steps.length) * 100}%`;
+        }
+
+        function checkAnswer() {
+            const value = answer.value.trim().toLowerCase();
+
+            if (value === steps[current].word) {
+                message.className = "success";
+                message.textContent = "Teisingai!";
+
+                current++;
+
+                if (current >= steps.length) {
+                    window.location.href = "/pabaiga";
+                    return;
+                }
+
+                setTimeout(() => {
+                    message.textContent = "";
+                    showStep();
+                }, 450);
+
+            } else {
+                message.className = "error";
+                message.textContent = "Neteisingai. Bandyk dar kartą.";
+                answer.select();
+            }
+        }
+
+        check.addEventListener("click", checkAnswer);
+
+        answer.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                checkAnswer();
+            }
+        });
+
+        showStep();
+    </script>
+
+</body>
+
+</html>
