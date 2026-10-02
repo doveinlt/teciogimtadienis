@@ -1,117 +1,255 @@
 <!DOCTYPE html>
 <html lang="lt">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Guess</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Guess</title>
+  <link rel="stylesheet" href="style.css">
 
+<style>
+  .ending {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(59,130,246,.28), transparent 30%),
+      radial-gradient(circle at 80% 80%, rgba(168,85,247,.28), transparent 30%),
+      linear-gradient(135deg, #020617, #111827, #172554);
+    background-size: 100% 100%, 100% 100%, 200% 200%;
+    animation: endingBg 10s ease infinite;
+  }
+
+  .ending.show {
+    display: flex;
+  }
+
+  @keyframes endingBg {
+    0%,100% { background-position: 0 0,100% 100%,0 50%; }
+    50% { background-position: 100% 100%,0 0,100% 50%; }
+  }
+
+  .ending-card {
+    width: min(620px,100%);
+    position: relative;
+    text-align: center;
+    padding: 45px 30px 38px;
+    border-radius: 30px;
+    background: rgba(15,23,42,.76);
+    border: 1px solid rgba(255,255,255,.15);
+    box-shadow: 0 30px 100px rgba(0,0,0,.5), inset 0 1px rgba(255,255,255,.08);
+    backdrop-filter: blur(20px);
+    animation: endingIn .9s cubic-bezier(.2,.8,.2,1);
+  }
+
+  @keyframes endingIn {
+    from { opacity:0; transform:translateY(60px) scale(.9); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  .ending-image {
+    width: 230px;
+    height: 230px;
+    object-fit: contain;
+    animation: endingBounce 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 20px 25px rgba(0,0,0,.35));
+  }
+
+  @keyframes endingBounce {
+    0%,100% { transform:translateY(0) rotate(-2deg); }
+    50% { transform:translateY(-12px) rotate(2deg); }
+  }
+
+  .ending-card h2 {
+    margin: 10px 0 18px;
+    font-size: clamp(34px,7vw,58px);
+    line-height: 1.05;
+    background: linear-gradient(90deg,#60a5fa,#c084fc,#34d399,#60a5fa);
+    background-size: 300% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: endingText 4s linear infinite;
+  }
+
+  @keyframes endingText {
+    to { background-position:300% center; }
+  }
+
+  .ending-card p {
+    color:#cbd5e1;
+    font-size:18px;
+    line-height:1.7;
+  }
+
+  .ending-line {
+    width:100px;
+    height:3px;
+    margin:25px auto;
+    border-radius:20px;
+    background:linear-gradient(90deg,#60a5fa,#c084fc,#34d399);
+  }
+
+  .end-confetti {
+    position:absolute;
+    width:12px;
+    height:22px;
+    border-radius:3px;
+    animation: endFall 6s linear infinite;
+  }
+
+  @keyframes endFall {
+    from { transform:translateY(-50px) rotate(0); }
+    to { transform:translateY(110vh) rotate(720deg); }
+  }
+
+  .ec1{left:8%;top:-30px;background:#60a5fa}
+  .ec2{left:25%;top:-30px;background:#f472b6;animation-delay:1.5s}
+  .ec3{left:48%;top:-30px;background:#fbbf24;animation-delay:3s}
+  .ec4{left:67%;top:-30px;background:#34d399;animation-delay:2s}
+  .ec5{left:84%;top:-30px;background:#a78bfa;animation-delay:4s}
+  .ec6{left:93%;top:-30px;background:#fb7185;animation-delay:5s}
+</style>
+
+</head>
 <body>
 
-    <div class="box">
-        <h1>Atspėk slaptažodį</h1>
-        <p class="subtitle">
-            Sek užuominas ir po vieną atspėk visus slaptažodžio žodžius.
-        </p>
+<div class="box">
+  <h1>Atspėk slaptažodį</h1>
+  <p class="subtitle">
+    Sek užuominas ir po vieną atspėk visus slaptažodžio žodžius.
+  </p>
 
-        <div id="hintBox" class="hint">
-            <span class="hint-label">Užuomina</span>
-            <strong id="hint"></strong>
-        </div>
+  <div id="hintBox" class="hint">
+    <span class="hint-label">Užuomina</span>
+    <strong id="hint"></strong>
+  </div>
 
-        <div class="input-wrap">
-            <input id="answer" type="text" autocomplete="off" placeholder="Įrašyk atsakymą...">
-        </div>
+  <div class="input-wrap">
+    <input id="answer" type="text" autocomplete="off" placeholder="Įrašyk atsakymą...">
+  </div>
 
-        <button id="check">Tikrinti atsakymą</button>
+  <button id="check">Tikrinti atsakymą</button>
 
-        <div id="message"></div>
+  <div id="message"></div>
 
-        <div class="progress">
-            <span id="progressText">1 / 10</span>
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill" style="width:10%"></div>
-            </div>
-        </div>
+  <div class="progress">
+    <span id="progressText">1 / 10</span>
+    <div class="progress-bar">
+      <div id="progressFill" class="progress-fill" style="width:10%"></div>
     </div>
+  </div>
+</div>
 
-    <script>
-        const steps = [
-            { word: "kopa", hint: "suns vardas" },
-            { word: "2014", hint: "sun aus gimimo metai" },
-            { word: "ziema", hint: "saltas metu laikas" },
-            { word: "1991", hint: "tavo gimimo metai" },
-            { word: "gjan", hint: "megstamiausia atlikeja" },
-            { word: "2019", hint: "vidurines dukters gimimo metai" },
-            { word: "geguze", hint: "vidurines dukters gimimo menuo" },
-            { word: "veterinaras", hint: "gyvunu daktaras" },
-            { word: "corona", hint: "gerimas po pagiriu" },
-            { word: "2023", hint: "kieno gimimo metai" }
-        ];
+<script>
+const steps = [
+  {word:"kopa", hint:"suns vardas"},
+  {word:"2014", hint:"sun aus gimimo metai"},
+  {word:"ziema", hint:"saltas metu laikas"},
+  {word:"1991", hint:"tavo gimimo metai"},
+  {word:"gjan", hint:"megstamiausia atlikeja"},
+  {word:"2019", hint:"vidurines dukters gimimo metai"},
+  {word:"geguze", hint:"vidurines dukters gimimo menuo"},
+  {word:"veterinaras", hint:"gyvunu daktaras"},
+  {word:"corona", hint:"gerimas po pagiriu"},
+  {word:"2023", hint:"kieno gimimo metai"}
+];
 
-        let current = 0;
+let current = 0;
 
-        const hint = document.getElementById("hint");
-        const hintBox = document.getElementById("hintBox");
-        const answer = document.getElementById("answer");
-        const check = document.getElementById("check");
-        const message = document.getElementById("message");
-        const progressText = document.getElementById("progressText");
-        const progressFill = document.getElementById("progressFill");
+const hint = document.getElementById("hint");
+const hintBox = document.getElementById("hintBox");
+const answer = document.getElementById("answer");
+const check = document.getElementById("check");
+const message = document.getElementById("message");
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
 
-        function showStep() {
-            hint.textContent = steps[current].hint;
+function showEnding() {
+  document.getElementById("ending").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
 
-            hintBox.classList.remove("animate");
-            void hintBox.offsetWidth;
-            hintBox.classList.add("animate");
+function showStep() {
+  hint.textContent = steps[current].hint;
 
-            answer.value = "";
-            answer.focus();
+  hintBox.classList.remove("animate");
+  void hintBox.offsetWidth;
+  hintBox.classList.add("animate");
 
-            progressText.textContent = `${current + 1} / ${steps.length}`;
-            progressFill.style.width = `${((current + 1) / steps.length) * 100}%`;
-        }
+  answer.value = "";
+  answer.focus();
 
-        function checkAnswer() {
-            const value = answer.value.trim().toLowerCase();
+  progressText.textContent = `${current + 1} / ${steps.length}`;
+  progressFill.style.width = `${((current + 1) / steps.length) * 100}%`;
+}
 
-            if (value === steps[current].word) {
-                message.className = "success";
-                message.textContent = "Teisingai!";
+function checkAnswer() {
+  const value = answer.value.trim().toLowerCase();
 
-                current++;
+  if (value === steps[current].word) {
+    message.className = "success";
+    message.textContent = "Teisingai!";
 
-                if (current >= steps.length) {
-                    window.location.href = "/pabaiga";
-                    return;
-                }
+    current++;
 
-                setTimeout(() => {
-                    message.textContent = "";
-                    showStep();
-                }, 450);
+    if (current >= steps.length) {
+      showEnding();
+      return;
+    }
 
-            } else {
-                message.className = "error";
-                message.textContent = "Neteisingai. Bandyk dar kartą.";
-                answer.select();
-            }
-        }
+    setTimeout(() => {
+      message.textContent = "";
+      showStep();
+    }, 450);
 
-        check.addEventListener("click", checkAnswer);
+  } else {
+    message.className = "error";
+    message.textContent = "Neteisingai. Bandyk dar kartą.";
+    answer.select();
+  }
+}
 
-        answer.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                checkAnswer();
-            }
-        });
+check.addEventListener("click", checkAnswer);
 
-        showStep();
-    </script>
+answer.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    checkAnswer();
+  }
+});
+
+showStep();
+</script>
+
+
+<div id="ending" class="ending">
+  <div class="end-confetti ec1"></div>
+  <div class="end-confetti ec2"></div>
+  <div class="end-confetti ec3"></div>
+  <div class="end-confetti ec4"></div>
+  <div class="end-confetti ec5"></div>
+  <div class="end-confetti ec6"></div>
+
+  <div class="ending-card">
+    <img
+      class="ending-image"
+      src="https://bluemoji.io/cdn-proxy/646218c67da47160c64a84d5/66b3e594607b5d1305d4f5b7_90.png"
+      alt="Sventinis emoji"
+    >
+    <h2>Su gimtadieniu, teciu!</h2>
+    <p>
+      Sveikiname! Tu atspejai visa slapta zodi.
+      Linkime daug laimes, sveikatos ir graziu akimirku!
+    </p>
+    <div class="ending-line"></div>
+  </div>
+</div>
 
 </body>
-
 </html>
+
+
