@@ -138,25 +138,26 @@
   <div id="message"></div>
 
   <div class="progress">
-    <span id="progressText">1 / 10</span>
+    <span id="progressText">1 / 11</span>
     <div class="progress-bar">
-      <div id="progressFill" class="progress-fill" style="width:10%"></div>
+      <div id="progressFill" class="progress-fill" style="width:11%"></div>
     </div>
   </div>
 </div>
 
 <script>
 const steps = [
-  {word:"kopa", hint:"suns vardas"},
-  {word:"2014", hint:"sun aus gimimo metai"},
-  {word:"ziema", hint:"saltas metu laikas"},
-  {word:"1991", hint:"tavo gimimo metai"},
-  {word:"gjan", hint:"megstamiausia atlikeja"},
-  {word:"2019", hint:"vidurines dukters gimimo metai"},
-  {word:"geguze", hint:"vidurines dukters gimimo menuo"},
-  {word:"veterinaras", hint:"gyvunu daktaras"},
-  {word:"corona", hint:"gerimas po pagiriu"},
-  {word:"2023", hint:"kieno gimimo metai"}
+  {word:"kopa", hint:"Šuns vardas?"},
+  {word:"2014", hint:"Sūnaus gimimo metai?"},
+  {word:"ziema", hint:"Šaltasis metų laikas?"},
+  {word:"1991", hint:"Tavo gimimo metai?"},
+  {word:"gjan", hint:"Mėgstamiausia atlikėja?"},
+  {word:"2019", hint:"Vidurinės dukters gimimo metai?"},
+  {word:"geguze", hint:"Vidurinės dukters gimimo menuo?"},
+  {word:"veterinaras", hint:"Gyvūnų daktaras?"},
+  {word:"egiptas", hint:"Pirma aplankyta atostogų šalis?"},
+  {word:"greta", hint:"Mylimiausia motėris?"}
+  {word:"mikenai", hint:"Kur užaugai?"}
 ];
 
 let current = 0;
@@ -209,7 +210,7 @@ function checkAnswer() {
 
   } else {
     message.className = "error";
-    message.textContent = "Neteisingai. Bandyk dar kartą.";
+    message.textContent = "Neteisingai.";
     answer.select();
   }
 }
@@ -240,10 +241,11 @@ showStep();
       src="https://bluemoji.io/cdn-proxy/646218c67da47160c64a84d5/66b3e594607b5d1305d4f5b7_90.png"
       alt="Sventinis emoji"
     >
-    <h2>Su gimtadieniu, teciu!</h2>
+    <h2>Su gimtadieniu, teti!</h2>
     <p>
-      Sveikiname! Tu atspejai visa slapta zodi.
-      Linkime daug laimes, sveikatos ir graziu akimirku!
+      Sveikina tave sūnelis Dovydas!
+      Linkiu gerų atostogu ir laimės ir džiaugsmo
+      Myliu
     </p>
     <div class="ending-line"></div>
   </div>
